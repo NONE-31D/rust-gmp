@@ -105,6 +105,8 @@ extern "C" {
     fn __gmpz_millerrabin(n: mpz_srcptr, reps: c_int) -> c_int;
     fn __gmpz_urandomb(rop: mpz_ptr, state: gmp_randstate_t, n: mp_bitcnt_t);
     fn __gmpz_urandomm(rop: mpz_ptr, state: gmp_randstate_t, n: mpz_srcptr);
+    fn __gmpz_jacobi(a: mpz_srcptr, b: mpz_srcptr) -> c_int;
+
 }
 
 pub struct Mpz {
@@ -507,6 +509,18 @@ impl Mpz {
             Sign::Positive
         } else {
             Sign::Negative
+        }
+    }
+
+    pub fn jacobi(a: &Mpz, b: &Mpz) -> i32 {
+        unsafe {
+            __gmpz_jacobi(&a.mpz, &b.mpz)
+        }
+    }
+
+    pub fn mul_2exp(rop: &mut Mpz, op1: &Mpz, op2: i32)  {
+        unsafe {
+            __gmpz_mul_2exp(&mut rop.mpz, &op1.mpz, op2 as u64)
         }
     }
 
